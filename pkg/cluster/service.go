@@ -2,16 +2,16 @@ package cluster
 
 import "github.com/jpellizzari/fake-wego/pkg/application"
 
-type ClusterService interface {
+type Service interface {
 	ApplyApplication(c Cluster, a application.Application) error
 }
 
-func NewClusterService() ClusterService {
-	return clusterService{}
+func NewService() Service {
+	return svc{}
 }
 
-type clusterService struct{}
+type svc struct{}
 
-func (cs clusterService) ApplyApplication(c Cluster, a application.Application) error {
+func (cs svc) ApplyApplication(c Cluster, a application.Application) error {
 	return nil
 }
