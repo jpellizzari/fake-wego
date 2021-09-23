@@ -23,11 +23,11 @@ func main() {
 	dks := deploykey.NewService(cs, k)
 	as := add.NewAddService(gs, prs, cs, dks)
 	getSvc := get.NewService(k)
-	commitsSvc := commits.NewService()
+	commitsSvc := commits.NewService(getSvc)
 
-	mux.Handle("/applications/new", server.AddApp(as))
-	mux.Handle("/applications", server.GetApp(getSvc))
+	mux.Handle("/application/:name", server.GetApp(getSvc))
 	mux.Handle("/applications/commits", server.ListCommits(getSvc, commitsSvc))
+	mux.Handle("/applications/new", server.AddApp(as))
 
 	if err := http.ListenAndServe("0.0.0.0:8080", mux); err != nil {
 		panic(err)

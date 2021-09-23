@@ -12,9 +12,9 @@ func main() {
 	var name string
 	flag.String("name", name, "")
 	c := fake.NewFakeClient()
-	ls := get.NewService(c)
+	gs := get.NewService(c)
 
-	app, err := ls.Get(name)
+	app, err := gs.Get(name)
 	if err != nil {
 		panic(err)
 	}

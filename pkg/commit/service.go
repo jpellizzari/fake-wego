@@ -4,16 +4,16 @@ import (
 	"context"
 
 	"github.com/fluxcd/go-git-providers/gitprovider"
-	"github.com/jpellizzari/fake-wego/pkg/application"
 	"github.com/jpellizzari/fake-wego/pkg/get"
 )
 
 type Service interface {
-	List(a application.Application, token string) ([]Commit, error)
+	List(appName string, token string) ([]Commit, error)
 }
 
-func NewService() Service {
+func NewService(gs get.Service) Service {
 	return svc{
+		getApp:         gs,
 		providerClient: defaultProviderClient,
 	}
 }
@@ -31,8 +31,14 @@ func findProviderName(s string) (string, error) {
 	return "", nil
 }
 
-func (s svc) List(a application.Application, token string) ([]Commit, error) {
+func (s svc) List(appName string, token string) ([]Commit, error) {
 	ctx := context.Background()
+
+	a, err := s.getApp.Get(appName)
+	if err != nil {
+		return nil, err
+	}
+
 	provider, err := findProviderName(a.ConfigRepoURL)
 	if err != nil {
 		return nil, err

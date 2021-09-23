@@ -19,16 +19,11 @@ func main() {
 
 	k := fake.NewFakeClient()
 	get := get.NewService(k)
-	commitsSvc := commits.NewService()
-
-	a, err := get.Get(name)
-	if err != nil {
-		panic(err)
-	}
+	commitsSvc := commits.NewService(get)
 
 	token := os.Getenv("GITHUB_TOKEN")
 
-	c, err := commitsSvc.List(a, token)
+	c, err := commitsSvc.List(name, token)
 	if err != nil {
 		panic(err)
 	}

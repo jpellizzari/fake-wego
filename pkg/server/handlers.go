@@ -19,6 +19,46 @@ type newAppRequest struct {
 	AutoMerge        bool
 }
 
+func GetApp(gs get.Service) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		name := r.URL.Query().Get("name")
+
+		app, err := gs.Get(name)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		b, err := json.Marshal(app)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		w.Write(b)
+	})
+}
+
+func ListCommits(getSvc get.Service, cs commits.Service) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		name := r.URL.Query().Get("name")
+		token := r.Header.Get("Authorization")
+
+		c, err := cs.List(name, token)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		b, err := json.Marshal(c)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.Write(b)
+	})
+}
+
 func AddApp(as add.AddService) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("Authorization")
@@ -50,50 +90,5 @@ func AddApp(as add.AddService) http.Handler {
 		}
 
 		w.WriteHeader(http.StatusOK)
-	})
-}
-
-func GetApp(gs get.Service) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		name := r.URL.Query().Get("name")
-		app, err := gs.Get(name)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		b, err := json.Marshal(app)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		w.Write(b)
-	})
-}
-
-func ListCommits(getSvc get.Service, cs commits.Service) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		name := r.URL.Query().Get("name")
-		token := r.Header.Get("Authorization")
-
-		a, err := getSvc.Get(name)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		c, err := cs.List(a, token)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		b, err := json.Marshal(c)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		w.Write(b)
 	})
 }

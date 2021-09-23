@@ -9,15 +9,6 @@ type Application struct {
 	Branch        string
 }
 
-func doFluxThingsToGenerateYaml(name string, u string) ([]byte, []byte, []byte) {
-	// Imagine we do some flux calls here to populate all the manifests
-	return []byte("application yaml"), []byte("source yaml"), []byte("kustomization yaml")
-}
-
-func (a Application) Validate() error {
-	return nil
-}
-
 func (a Application) ManifestYaml() map[string][]byte {
 	appYaml, sYaml, kYaml := doFluxThingsToGenerateYaml(a.Name, a.SourceURL)
 	return map[string][]byte{
@@ -29,4 +20,13 @@ func (a Application) ManifestYaml() map[string][]byte {
 
 func (a Application) DeployKeyName(clusterName string) string {
 	return fmt.Sprintf("%s-%s-deploy-key", a.Name, clusterName)
+}
+
+func (a Application) Validate() error {
+	return nil
+}
+
+func doFluxThingsToGenerateYaml(name string, u string) ([]byte, []byte, []byte) {
+	// Imagine we do some flux calls here to populate all the manifests
+	return []byte("application yaml"), []byte("source yaml"), []byte("kustomization yaml")
 }
