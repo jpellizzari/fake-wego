@@ -23,14 +23,6 @@ type svc struct {
 	providerClient func(providerName string, token string) gitprovider.Client
 }
 
-func defaultProviderClient(providerName string, token string) gitprovider.Client {
-	return nil
-}
-
-func findProviderName(s string) (string, error) {
-	return "", nil
-}
-
 func (s svc) List(appName string, token string) ([]Commit, error) {
 	ctx := context.Background()
 
@@ -46,6 +38,8 @@ func (s svc) List(appName string, token string) ([]Commit, error) {
 
 	client := s.providerClient(provider, token)
 
+	// If we want to change this to do a gogit clone (instead of go-git-providers),
+	// its no problem because how we get the commits is abstracted away.
 	repo, err := client.OrgRepositories().Get(ctx, gitprovider.OrgRepositoryRef{})
 	if err != nil {
 		return nil, err
@@ -62,4 +56,12 @@ func (s svc) List(appName string, token string) ([]Commit, error) {
 	}
 
 	return l, nil
+}
+
+func defaultProviderClient(providerName string, token string) gitprovider.Client {
+	return nil
+}
+
+func findProviderName(s string) (string, error) {
+	return "", nil
 }
