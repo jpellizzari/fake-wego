@@ -4,7 +4,6 @@ import "github.com/jpellizzari/fake-wego/pkg/application"
 
 type ClusterService interface {
 	ApplyApplication(c Cluster, a application.Application) error
-	ListApplications(c Cluster) ([]application.Application, error)
 }
 
 func NewClusterService() ClusterService {

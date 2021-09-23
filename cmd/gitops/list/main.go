@@ -1,22 +1,17 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 
-	"github.com/jpellizzari/fake-wego/pkg/cluster"
+	"github.com/jpellizzari/fake-wego/pkg/list"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
 func main() {
-	var name string
+	c := fake.NewFakeClient()
+	ls := list.NewService(c)
 
-	flag.String(name, "name", "")
-
-	flag.Parse()
-
-	cs := cluster.NewClusterService()
-
-	apps, err := cs.ListApplications(cluster.DetectDefaultCluster())
+	apps, err := ls.List()
 	if err != nil {
 		panic(err)
 	}

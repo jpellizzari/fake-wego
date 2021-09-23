@@ -6,9 +6,9 @@ import (
 
 	"github.com/jpellizzari/fake-wego/pkg/add"
 	"github.com/jpellizzari/fake-wego/pkg/application"
-	"github.com/jpellizzari/fake-wego/pkg/cluster"
 	"github.com/jpellizzari/fake-wego/pkg/commits"
 	"github.com/jpellizzari/fake-wego/pkg/get"
+	"github.com/jpellizzari/fake-wego/pkg/list"
 )
 
 type newAppRequest struct {
@@ -51,11 +51,9 @@ func AddApp(as add.AddService) http.Handler {
 	})
 }
 
-func ListApp(cs cluster.ClusterService) http.Handler {
+func ListApp(ls list.Service) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		c := cluster.DetectDefaultCluster()
-
-		apps, err := cs.ListApplications(c)
+		apps, err := ls.List()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
