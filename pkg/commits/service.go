@@ -33,7 +33,7 @@ func findProviderName(s string) (string, error) {
 
 func (s svc) List(a application.Application, token string) ([]Commit, error) {
 	ctx := context.Background()
-	provider, err := findProviderName(a.ConfigRepo())
+	provider, err := findProviderName(a.ConfigRepoURL)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (s svc) List(a application.Application, token string) ([]Commit, error) {
 		return nil, err
 	}
 
-	com, err := repo.Commits().ListPage(ctx, a.Branch(), 10, 1)
+	com, err := repo.Commits().ListPage(ctx, a.Branch, 10, 1)
 	if err != nil {
 		return nil, err
 	}

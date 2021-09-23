@@ -29,7 +29,11 @@ func (s svc) List() ([]application.Application, error) {
 
 	out := []application.Application{}
 	for _, a := range l.Items {
-		out = append(out, application.New(a.Name, a.Spec.URL))
+		out = append(out, application.Application{
+			Name:          a.Name,
+			SourceURL:     a.Spec.URL,
+			ConfigRepoURL: a.Spec.ConfigURL,
+		})
 	}
 
 	return out, nil

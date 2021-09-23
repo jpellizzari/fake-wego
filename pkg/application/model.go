@@ -1,29 +1,17 @@
 package application
 
+import "fmt"
+
 type Application struct {
-	name          string
-	sourceURL     string
-	configRepoURL string
-	manifests     map[string][]byte
-	branch        string
+	Name          string
+	SourceURL     string
+	ConfigRepoURL string
+	Branch        string
 }
 
-func doFluxThingsToGenerateYaml(name string, u string) ([]byte, []byte) {
+func doFluxThingsToGenerateYaml(name string, u string) ([]byte, []byte, []byte) {
 	// Imagine we do some flux calls here to populate all the manifests
-	return []byte("source yaml"), []byte("kustomization yaml")
-}
-
-func New(name string, source string) Application {
-	sYaml, kYaml := doFluxThingsToGenerateYaml(name, source)
-
-	return Application{
-		name:      name,
-		sourceURL: source,
-		manifests: map[string][]byte{
-			"kustomization.yaml": kYaml,
-			"source.yaml":        sYaml,
-		},
-	}
+	return []byte("application yaml"), []byte("source yaml"), []byte("kustomization yaml")
 }
 
 func (a Application) Validate() error {
@@ -31,17 +19,14 @@ func (a Application) Validate() error {
 }
 
 func (a Application) ManifestYaml() map[string][]byte {
-	return a.manifests
+	appYaml, sYaml, kYaml := doFluxThingsToGenerateYaml(a.Name, a.SourceURL)
+	return map[string][]byte{
+		"application.yaml":   appYaml,
+		"source.yaml":        sYaml,
+		"kustomization.yaml": kYaml,
+	}
 }
 
-func (a Application) ConfigRepo() string {
-	return a.configRepoURL
-}
-
-func (a Application) Branch() string {
-	return a.branch
-}
-
-func (a Application) Name() string {
-	return a.name
+func (a Application) DeployKeyName(clusterName string) string {
+	return fmt.Sprintf("%s-%s-deploy-key", a.Name, clusterName)
 }

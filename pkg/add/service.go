@@ -3,6 +3,7 @@ package add
 import (
 	"github.com/jpellizzari/fake-wego/pkg/application"
 	"github.com/jpellizzari/fake-wego/pkg/cluster"
+	"github.com/jpellizzari/fake-wego/pkg/deploykey"
 	"github.com/jpellizzari/fake-wego/pkg/gitrepo"
 	"github.com/jpellizzari/fake-wego/pkg/pullrequest"
 )
@@ -11,11 +12,12 @@ type AddService interface {
 	Add(app application.Application, params AddParams) error
 }
 
-func NewAddService(gs gitrepo.Service, prs pullrequest.Service, cs cluster.ClusterService) AddService {
+func NewAddService(gs gitrepo.Service, prs pullrequest.Service, cs cluster.ClusterService, dks deploykey.Service) AddService {
 	return addService{
 		gs:  gs,
 		prs: prs,
 		cs:  cs,
+		dks: dks,
 	}
 }
 
@@ -23,18 +25,25 @@ type addService struct {
 	gs  gitrepo.Service
 	prs pullrequest.Service
 	cs  cluster.ClusterService
+	dks deploykey.Service
 }
 
 type AddParams struct {
-	AutoMerge                bool
-	ConfigDestinationRepoURL string
-	Token                    string
+	AutoMerge bool
+	Token     string
 }
 
 func (a addService) Add(app application.Application, params AddParams) error {
-	destRepo := gitrepo.NewFromURL(params.ConfigDestinationRepoURL)
+	destRepo := gitrepo.NewFromURL(app.ConfigRepoURL)
 
-	if err := a.gs.CommitApplication(destRepo, "main", app); err != nil {
+	cl := cluster.DetectDefaultCluster()
+
+	dk, err := a.dks.Fetch(cl, app)
+	if err != nil {
+		return err
+	}
+
+	if err := a.gs.CommitApplication(destRepo, dk, app); err != nil {
 		return err
 	}
 

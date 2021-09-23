@@ -12,12 +12,12 @@ import (
 )
 
 type newAppRequest struct {
-	Name                     string
-	SourceRepoURL            string
-	SourceRepoBranch         string
-	SourceRepoPath           string
-	ConfigDestinationRepoURL string
-	AutoMerge                bool
+	Name             string
+	SourceRepoURL    string
+	SourceRepoBranch string
+	SourceRepoPath   string
+	ConfigRepoURL    string
+	AutoMerge        bool
 }
 
 func AddApp(as add.AddService) http.Handler {
@@ -29,7 +29,11 @@ func AddApp(as add.AddService) http.Handler {
 			return
 		}
 
-		a := application.New(req.Name, req.SourceRepoURL)
+		a := application.Application{
+			Name:          req.Name,
+			SourceURL:     req.SourceRepoURL,
+			ConfigRepoURL: req.ConfigRepoURL,
+		}
 
 		if err := a.Validate(); err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -37,9 +41,8 @@ func AddApp(as add.AddService) http.Handler {
 		}
 
 		params := add.AddParams{
-			Token:                    token,
-			ConfigDestinationRepoURL: req.ConfigDestinationRepoURL,
-			AutoMerge:                req.AutoMerge,
+			Token:     token,
+			AutoMerge: req.AutoMerge,
 		}
 
 		if err := as.Add(a, params); err != nil {

@@ -17,6 +17,6 @@ func main() {
 	}
 
 	for _, app := range apps {
-		fmt.Println(app.Name())
+		fmt.Println(app.Name)
 	}
 }
