@@ -39,7 +39,7 @@ func main() {
 	k := fake.NewFakeClient()
 	gs := gitrepo.NewService()
 	prs := pullrequest.NewPullRequestService()
-	cs := cluster.NewClusterService()
+	cs := cluster.NewService()
 	dks := deploykey.NewService(cs, k)
 	addSvc := add.NewAddService(gs, prs, cs, dks)
 

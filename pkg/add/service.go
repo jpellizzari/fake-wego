@@ -12,7 +12,7 @@ type AddService interface {
 	Add(app application.Application, params AddParams) error
 }
 
-func NewAddService(gs gitrepo.Service, prs pullrequest.Service, cs cluster.ClusterService, dks deploykey.Service) AddService {
+func NewAddService(gs gitrepo.Service, prs pullrequest.Service, cs cluster.Service, dks deploykey.Service) AddService {
 	return addService{
 		gs:  gs,
 		prs: prs,
@@ -24,7 +24,7 @@ func NewAddService(gs gitrepo.Service, prs pullrequest.Service, cs cluster.Clust
 type addService struct {
 	gs  gitrepo.Service
 	prs pullrequest.Service
-	cs  cluster.ClusterService
+	cs  cluster.Service
 	dks deploykey.Service
 }
 

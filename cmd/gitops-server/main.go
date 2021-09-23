@@ -18,7 +18,7 @@ func main() {
 	mux := http.NewServeMux()
 	gs := gitrepo.NewService()
 	prs := pullrequest.NewPullRequestService()
-	cs := cluster.NewClusterService()
+	cs := cluster.NewService()
 	k := fake.NewFakeClient()
 	dks := deploykey.NewService(cs, k)
 	as := add.NewAddService(gs, prs, cs, dks)

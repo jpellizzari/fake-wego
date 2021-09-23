@@ -16,11 +16,11 @@ type Service interface {
 }
 
 type svc struct {
-	cs cluster.ClusterService
+	cs cluster.Service
 	k  client.Client
 }
 
-func NewService(cs cluster.ClusterService, k client.Client) Service {
+func NewService(cs cluster.Service, k client.Client) Service {
 	return svc{cs: cs, k: k}
 }
 
