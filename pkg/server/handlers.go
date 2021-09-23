@@ -6,7 +6,7 @@ import (
 
 	"github.com/jpellizzari/fake-wego/pkg/add"
 	"github.com/jpellizzari/fake-wego/pkg/application"
-	"github.com/jpellizzari/fake-wego/pkg/commits"
+	commits "github.com/jpellizzari/fake-wego/pkg/commit"
 	"github.com/jpellizzari/fake-wego/pkg/get"
 )
 

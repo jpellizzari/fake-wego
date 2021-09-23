@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jpellizzari/fake-wego/pkg/commits"
+	commits "github.com/jpellizzari/fake-wego/pkg/commit"
 	"github.com/jpellizzari/fake-wego/pkg/get"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )

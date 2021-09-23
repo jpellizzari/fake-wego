@@ -5,7 +5,7 @@ import (
 
 	"github.com/jpellizzari/fake-wego/pkg/add"
 	"github.com/jpellizzari/fake-wego/pkg/cluster"
-	"github.com/jpellizzari/fake-wego/pkg/commits"
+	commits "github.com/jpellizzari/fake-wego/pkg/commit"
 	"github.com/jpellizzari/fake-wego/pkg/deploykey"
 	"github.com/jpellizzari/fake-wego/pkg/get"
 	"github.com/jpellizzari/fake-wego/pkg/gitrepo"
