@@ -8,7 +8,6 @@ import (
 	"github.com/jpellizzari/fake-wego/pkg/application"
 	"github.com/jpellizzari/fake-wego/pkg/commits"
 	"github.com/jpellizzari/fake-wego/pkg/get"
-	"github.com/jpellizzari/fake-wego/pkg/list"
 )
 
 type newAppRequest struct {
@@ -54,15 +53,16 @@ func AddApp(as add.AddService) http.Handler {
 	})
 }
 
-func ListApp(ls list.Service) http.Handler {
+func GetApp(gs get.Service) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		apps, err := ls.List()
+		name := r.URL.Query().Get("name")
+		app, err := gs.Get(name)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
-		b, err := json.Marshal(apps)
+		b, err := json.Marshal(app)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return

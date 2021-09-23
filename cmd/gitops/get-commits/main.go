@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jpellizzari/fake-wego/pkg/cluster"
 	"github.com/jpellizzari/fake-wego/pkg/commits"
 	"github.com/jpellizzari/fake-wego/pkg/get"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
 func main() {
@@ -17,8 +17,8 @@ func main() {
 
 	flag.Parse()
 
-	cs := cluster.NewClusterService()
-	get := get.NewGetService(cs)
+	k := fake.NewFakeClient()
+	get := get.NewService(k)
 	commitsSvc := commits.NewService()
 
 	a, err := get.Get(name)

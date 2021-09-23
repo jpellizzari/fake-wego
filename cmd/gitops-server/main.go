@@ -9,7 +9,6 @@ import (
 	"github.com/jpellizzari/fake-wego/pkg/deploykey"
 	"github.com/jpellizzari/fake-wego/pkg/get"
 	"github.com/jpellizzari/fake-wego/pkg/gitrepo"
-	"github.com/jpellizzari/fake-wego/pkg/list"
 	"github.com/jpellizzari/fake-wego/pkg/pullrequest"
 	"github.com/jpellizzari/fake-wego/pkg/server"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
@@ -23,12 +22,11 @@ func main() {
 	k := fake.NewFakeClient()
 	dks := deploykey.NewService(cs, k)
 	as := add.NewAddService(gs, prs, cs, dks)
-	getSvc := get.NewGetService(cs)
+	getSvc := get.NewService(k)
 	commitsSvc := commits.NewService()
-	ls := list.NewService(fake.NewFakeClient())
 
 	mux.Handle("/applications/new", server.AddApp(as))
-	mux.Handle("/applications", server.ListApp(ls))
+	mux.Handle("/applications", server.GetApp(getSvc))
 	mux.Handle("/applications/commits", server.ListCommits(getSvc, commitsSvc))
 
 	if err := http.ListenAndServe("0.0.0.0:8080", mux); err != nil {

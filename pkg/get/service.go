@@ -1,22 +1,38 @@
 package get
 
 import (
+	"context"
+
 	"github.com/jpellizzari/fake-wego/pkg/application"
-	"github.com/jpellizzari/fake-wego/pkg/cluster"
+	wego "github.com/weaveworks/weave-gitops/api/v1alpha1"
+	"k8s.io/apimachinery/pkg/types"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type Service interface {
 	Get(name string) (application.Application, error)
 }
 
-func NewGetService(cs cluster.ClusterService) Service {
-	return svc{cs: cs}
+func NewService(k client.Client) Service {
+	return svc{k: k}
 }
 
 type svc struct {
-	cs cluster.ClusterService
+	k client.Client
 }
 
 func (s svc) Get(name string) (application.Application, error) {
-	return application.Application{}, nil
+	wegoApp := &wego.Application{}
+
+	if err := s.k.Get(context.Background(), types.NamespacedName{Name: name}, wegoApp); err != nil {
+		return application.Application{}, nil
+	}
+
+	app := application.Application{Name: wegoApp.Name}
+
+	if err := app.Validate(); err != nil {
+		return application.Application{}, nil
+	}
+
+	return app, nil
 }
