@@ -22,13 +22,13 @@ type svc struct {
 }
 
 func (s svc) Get(name string) (application.Application, error) {
-	wegoApp := &wego.Application{}
+	k8sApp := &wego.Application{}
 
-	if err := s.k.Get(context.Background(), types.NamespacedName{Name: name}, wegoApp); err != nil {
+	if err := s.k.Get(context.Background(), types.NamespacedName{Name: name}, k8sApp); err != nil {
 		return application.Application{}, nil
 	}
 
-	app := application.Application{Name: wegoApp.Name}
+	app := application.Application{Name: k8sApp.Name}
 
 	if err := app.Validate(); err != nil {
 		return application.Application{}, nil
