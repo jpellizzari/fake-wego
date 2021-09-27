@@ -3,8 +3,8 @@ package deploykey
 import (
 	"context"
 
-	"github.com/jpellizzari/fake-wego/pkg/cluster"
 	"github.com/jpellizzari/fake-wego/pkg/models"
+	"github.com/jpellizzari/fake-wego/pkg/services/cluster"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"

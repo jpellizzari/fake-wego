@@ -1,12 +1,12 @@
 package application
 
 import (
-	"github.com/jpellizzari/fake-wego/pkg/cluster"
-	"github.com/jpellizzari/fake-wego/pkg/deploykey"
+	"github.com/jpellizzari/fake-wego/pkg/services/cluster"
+	"github.com/jpellizzari/fake-wego/pkg/services/deploykey"
 
-	"github.com/jpellizzari/fake-wego/pkg/gitrepo"
 	"github.com/jpellizzari/fake-wego/pkg/models"
-	"github.com/jpellizzari/fake-wego/pkg/pullrequest"
+	"github.com/jpellizzari/fake-wego/pkg/services/gitrepo"
+	"github.com/jpellizzari/fake-wego/pkg/services/pullrequest"
 )
 
 type Adder interface {

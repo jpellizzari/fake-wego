@@ -5,8 +5,8 @@ import (
 
 	"github.com/fluxcd/go-git-providers/gitprovider"
 
-	"github.com/jpellizzari/fake-wego/pkg/application"
 	"github.com/jpellizzari/fake-wego/pkg/models"
+	"github.com/jpellizzari/fake-wego/pkg/services/application"
 )
 
 type Service interface {

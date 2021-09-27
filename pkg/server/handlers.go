@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/jpellizzari/fake-wego/pkg/application"
-	commits "github.com/jpellizzari/fake-wego/pkg/commit"
 	"github.com/jpellizzari/fake-wego/pkg/models"
+	"github.com/jpellizzari/fake-wego/pkg/services/application"
+	"github.com/jpellizzari/fake-wego/pkg/services/commit"
 )
 
 type newAppRequest struct {
@@ -38,7 +38,7 @@ func GetApp(gs application.Getter) http.Handler {
 	})
 }
 
-func ListCommits(getSvc application.Getter, cs commits.Service) http.Handler {
+func ListCommits(getSvc application.Getter, cs commit.Service) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
 		token := r.Header.Get("Authorization")
