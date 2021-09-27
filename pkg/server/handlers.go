@@ -4,10 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/jpellizzari/fake-wego/pkg/add"
 	"github.com/jpellizzari/fake-wego/pkg/application"
 	commits "github.com/jpellizzari/fake-wego/pkg/commit"
-	"github.com/jpellizzari/fake-wego/pkg/get"
+	"github.com/jpellizzari/fake-wego/pkg/models"
 )
 
 type newAppRequest struct {
@@ -19,7 +18,7 @@ type newAppRequest struct {
 	AutoMerge        bool
 }
 
-func GetApp(gs get.Service) http.Handler {
+func GetApp(gs application.Getter) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
 
@@ -39,7 +38,7 @@ func GetApp(gs get.Service) http.Handler {
 	})
 }
 
-func ListCommits(getSvc get.Service, cs commits.Service) http.Handler {
+func ListCommits(getSvc application.Getter, cs commits.Service) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
 		token := r.Header.Get("Authorization")
@@ -59,7 +58,7 @@ func ListCommits(getSvc get.Service, cs commits.Service) http.Handler {
 	})
 }
 
-func AddApp(as add.AddService) http.Handler {
+func AddApp(as application.Adder) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("Authorization")
 		req := &newAppRequest{}
@@ -68,7 +67,7 @@ func AddApp(as add.AddService) http.Handler {
 			return
 		}
 
-		a := application.Application{
+		a := models.Application{
 			Name:          req.Name,
 			SourceURL:     req.SourceRepoURL,
 			ConfigRepoURL: req.ConfigRepoURL,
@@ -79,12 +78,12 @@ func AddApp(as add.AddService) http.Handler {
 			return
 		}
 
-		params := add.AddParams{
+		params := application.AddParams{
 			Token:     token,
 			AutoMerge: req.AutoMerge,
 		}
 
-		if err := as.Add(a, params); err != nil {
+		if err := as.Add(a, models.DetectDefaultCluster(), params); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}

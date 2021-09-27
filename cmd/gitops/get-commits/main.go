@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	commits "github.com/jpellizzari/fake-wego/pkg/commit"
-	"github.com/jpellizzari/fake-wego/pkg/get"
+	"github.com/jpellizzari/fake-wego/pkg/services/application"
+	commits "github.com/jpellizzari/fake-wego/pkg/services/commit"
+
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
@@ -18,7 +19,7 @@ func main() {
 	flag.Parse()
 
 	k := fake.NewFakeClient()
-	get := get.NewService(k)
+	get := application.NewGetter(k)
 	commitsSvc := commits.NewService(get)
 
 	token := os.Getenv("GITHUB_TOKEN")

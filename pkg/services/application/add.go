@@ -1,18 +1,19 @@
-package add
+package application
 
 import (
-	"github.com/jpellizzari/fake-wego/pkg/application"
 	"github.com/jpellizzari/fake-wego/pkg/cluster"
 	"github.com/jpellizzari/fake-wego/pkg/deploykey"
+
 	"github.com/jpellizzari/fake-wego/pkg/gitrepo"
+	"github.com/jpellizzari/fake-wego/pkg/models"
 	"github.com/jpellizzari/fake-wego/pkg/pullrequest"
 )
 
-type AddService interface {
-	Add(app application.Application, params AddParams) error
+type Adder interface {
+	Add(app models.Application, cl models.Cluster, params AddParams) error
 }
 
-func NewAddService(gs gitrepo.Service, prs pullrequest.Service, cs cluster.Service, dks deploykey.Service) AddService {
+func NewAdder(gs gitrepo.Service, prs pullrequest.Service, cs cluster.Applier, dks deploykey.Service) Adder {
 	return addService{
 		gs:  gs,
 		prs: prs,
@@ -24,7 +25,7 @@ func NewAddService(gs gitrepo.Service, prs pullrequest.Service, cs cluster.Servi
 type addService struct {
 	gs  gitrepo.Service
 	prs pullrequest.Service
-	cs  cluster.Service
+	cs  cluster.Applier
 	dks deploykey.Service
 }
 
@@ -33,10 +34,8 @@ type AddParams struct {
 	Token     string
 }
 
-func (a addService) Add(app application.Application, params AddParams) error {
-	destRepo := gitrepo.NewFromURL(app.ConfigRepoURL)
-
-	cl := cluster.DetectDefaultCluster()
+func (a addService) Add(app models.Application, cl models.Cluster, params AddParams) error {
+	destRepo := models.NewGitRepoFromURL(app.ConfigRepoURL)
 
 	dk, err := a.dks.Fetch(cl, app)
 	if err != nil {
@@ -58,9 +57,7 @@ func (a addService) Add(app application.Application, params AddParams) error {
 		}
 	}
 
-	c := cluster.DetectDefaultCluster()
-
-	if err := a.cs.ApplyApplication(c, app); err != nil {
+	if err := a.cs.ApplyApplication(cl, app); err != nil {
 		return err
 	}
 

@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jpellizzari/fake-wego/pkg/add"
-	"github.com/jpellizzari/fake-wego/pkg/application"
-	"github.com/jpellizzari/fake-wego/pkg/cluster"
-	"github.com/jpellizzari/fake-wego/pkg/deploykey"
-	"github.com/jpellizzari/fake-wego/pkg/gitrepo"
-	"github.com/jpellizzari/fake-wego/pkg/pullrequest"
+	"github.com/jpellizzari/fake-wego/pkg/models"
+	"github.com/jpellizzari/fake-wego/pkg/services/application"
+	"github.com/jpellizzari/fake-wego/pkg/services/cluster"
+	"github.com/jpellizzari/fake-wego/pkg/services/deploykey"
+	"github.com/jpellizzari/fake-wego/pkg/services/gitrepo"
+	"github.com/jpellizzari/fake-wego/pkg/services/pullrequest"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
@@ -18,7 +18,7 @@ func main() {
 	var name string
 	var sourceUrl string
 	var configRepoURL string
-	params := add.AddParams{}
+	params := application.AddParams{}
 
 	flag.String(name, "name", "")
 	flag.String(sourceUrl, "sourceurl", "")
@@ -27,7 +27,7 @@ func main() {
 
 	flag.Parse()
 
-	app := application.Application{
+	app := models.Application{
 		Name:          name,
 		SourceURL:     sourceUrl,
 		ConfigRepoURL: configRepoURL,
@@ -39,13 +39,13 @@ func main() {
 	k := fake.NewFakeClient()
 	gs := gitrepo.NewService()
 	prs := pullrequest.NewPullRequestService()
-	cs := cluster.NewService()
+	cs := cluster.NewApplier()
 	dks := deploykey.NewService(cs, k)
-	addSvc := add.NewAddService(gs, prs, cs, dks)
+	addSvc := application.NewAdder(gs, prs, cs, dks)
 
 	params.Token = os.Getenv("GITHUB_TOKEN")
 
-	if err := addSvc.Add(app, params); err != nil {
+	if err := addSvc.Add(app, models.DetectDefaultCluster(), params); err != nil {
 		panic(err.Error())
 	}
 

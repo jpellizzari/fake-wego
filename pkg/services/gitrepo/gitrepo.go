@@ -7,12 +7,11 @@ import (
 
 	gogit "github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
-	"github.com/jpellizzari/fake-wego/pkg/application"
-	"github.com/jpellizzari/fake-wego/pkg/deploykey"
+	"github.com/jpellizzari/fake-wego/pkg/models"
 )
 
 type Service interface {
-	CommitApplication(repo GitRepo, dk deploykey.DeployKey, a application.Application) error
+	CommitApplication(repo models.GitRepo, dk models.DeployKey, a models.Application) error
 }
 
 func NewService() Service {
@@ -22,7 +21,7 @@ func NewService() Service {
 type gitService struct {
 }
 
-func (gs gitService) CommitApplication(repo GitRepo, dk deploykey.DeployKey, a application.Application) error {
+func (gs gitService) CommitApplication(repo models.GitRepo, dk models.DeployKey, a models.Application) error {
 	auth, err := dk.PublicKeys()
 	if err != nil {
 		return err

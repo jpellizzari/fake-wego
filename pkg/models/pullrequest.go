@@ -1,4 +1,4 @@
-package pullrequest
+package models
 
 type ProviderName string
 

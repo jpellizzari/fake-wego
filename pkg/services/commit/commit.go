@@ -4,14 +4,16 @@ import (
 	"context"
 
 	"github.com/fluxcd/go-git-providers/gitprovider"
-	"github.com/jpellizzari/fake-wego/pkg/get"
+
+	"github.com/jpellizzari/fake-wego/pkg/application"
+	"github.com/jpellizzari/fake-wego/pkg/models"
 )
 
 type Service interface {
-	List(appName string, token string) ([]Commit, error)
+	List(appName string, token string) ([]models.Commit, error)
 }
 
-func NewService(gs get.Service) Service {
+func NewService(gs application.Getter) Service {
 	return svc{
 		getApp:         gs,
 		providerClient: defaultProviderClient,
@@ -19,11 +21,11 @@ func NewService(gs get.Service) Service {
 }
 
 type svc struct {
-	getApp         get.Service
+	getApp         application.Getter
 	providerClient func(providerName string, token string) gitprovider.Client
 }
 
-func (s svc) List(appName string, token string) ([]Commit, error) {
+func (s svc) List(appName string, token string) ([]models.Commit, error) {
 	ctx := context.Background()
 
 	a, err := s.getApp.Get(appName)
@@ -50,9 +52,9 @@ func (s svc) List(appName string, token string) ([]Commit, error) {
 		return nil, err
 	}
 
-	l := []Commit{}
+	l := []models.Commit{}
 	for _, commit := range com {
-		l = append(l, Commit{Hash: commit.Get().Sha})
+		l = append(l, models.Commit{Hash: commit.Get().Sha})
 	}
 
 	return l, nil

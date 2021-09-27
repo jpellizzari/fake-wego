@@ -1,4 +1,4 @@
-package commit
+package models
 
 import "time"
 

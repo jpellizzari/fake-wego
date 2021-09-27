@@ -1,4 +1,4 @@
-package deploykey
+package models
 
 import (
 	"errors"
@@ -8,6 +8,12 @@ import (
 
 type DeployKey struct {
 	pem []byte
+}
+
+func NewDeployKey(pem []byte) DeployKey {
+	return DeployKey{
+		pem: pem,
+	}
 }
 
 func (dk DeployKey) Validate() error {

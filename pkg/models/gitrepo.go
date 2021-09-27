@@ -1,4 +1,4 @@
-package gitrepo
+package models
 
 import (
 	"net/url"
@@ -8,6 +8,6 @@ type GitRepo struct {
 	URL url.URL
 }
 
-func NewFromURL(uri string) GitRepo {
+func NewGitRepoFromURL(uri string) GitRepo {
 	return GitRepo{}
 }

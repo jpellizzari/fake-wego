@@ -3,14 +3,13 @@ package main
 import (
 	"net/http"
 
-	"github.com/jpellizzari/fake-wego/pkg/add"
-	"github.com/jpellizzari/fake-wego/pkg/cluster"
-	commits "github.com/jpellizzari/fake-wego/pkg/commit"
-	"github.com/jpellizzari/fake-wego/pkg/deploykey"
-	"github.com/jpellizzari/fake-wego/pkg/get"
-	"github.com/jpellizzari/fake-wego/pkg/gitrepo"
-	"github.com/jpellizzari/fake-wego/pkg/pullrequest"
 	"github.com/jpellizzari/fake-wego/pkg/server"
+	"github.com/jpellizzari/fake-wego/pkg/services/application"
+	"github.com/jpellizzari/fake-wego/pkg/services/cluster"
+	"github.com/jpellizzari/fake-wego/pkg/services/commit"
+	"github.com/jpellizzari/fake-wego/pkg/services/deploykey"
+	"github.com/jpellizzari/fake-wego/pkg/services/gitrepo"
+	"github.com/jpellizzari/fake-wego/pkg/services/pullrequest"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
@@ -18,12 +17,12 @@ func main() {
 	mux := http.NewServeMux()
 	gs := gitrepo.NewService()
 	prs := pullrequest.NewPullRequestService()
-	cs := cluster.NewService()
+	cs := cluster.NewApplier()
 	k := fake.NewFakeClient()
 	dks := deploykey.NewService(cs, k)
-	as := add.NewAddService(gs, prs, cs, dks)
-	getSvc := get.NewService(k)
-	commitsSvc := commits.NewService(getSvc)
+	as := application.NewAdder(gs, prs, cs, dks)
+	getSvc := application.NewGetter(k)
+	commitsSvc := commit.NewService(getSvc)
 
 	mux.Handle("/application/:name", server.GetApp(getSvc))
 	mux.Handle("/applications/commits", server.ListCommits(getSvc, commitsSvc))
