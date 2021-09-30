@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/jpellizzari/fake-wego/pkg/application"
+	"github.com/jpellizzari/fake-wego/pkg/services/application"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 

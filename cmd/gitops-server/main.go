@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/jpellizzari/fake-wego/pkg/server"
+	"github.com/jpellizzari/fake-wego/pkg/adapters/server"
 	"github.com/jpellizzari/fake-wego/pkg/services/application"
 	"github.com/jpellizzari/fake-wego/pkg/services/cluster"
 	"github.com/jpellizzari/fake-wego/pkg/services/commit"
