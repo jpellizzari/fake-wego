@@ -2,7 +2,7 @@
 
 ### Models
 
-- The `models` directory contains data structures for the different WeGO domain entities. These are generally `structs` that do not contain logic.
+- The `models` directory contains data structures for the different WeGO domain entities. These are generally `structs` that do not contain business logic.
 - Models objects may have helper methods for common situations, such as converting between types, accessing a computed property, etc.
 - Models are typically thought of as "immutable", meaning that methods that mutates a model should return a new copy of that model (pass by value).
 
