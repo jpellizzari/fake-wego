@@ -9,11 +9,11 @@ import (
 	"github.com/jpellizzari/fake-wego/pkg/services/application"
 )
 
-type Service interface {
+type Lister interface {
 	List(appName string, token string) ([]models.Commit, error)
 }
 
-func NewService(gs application.Getter) Service {
+func NewService(gs application.Getter) Lister {
 	return svc{
 		getApp:         gs,
 		providerClient: defaultProviderClient,

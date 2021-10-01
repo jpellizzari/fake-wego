@@ -4,22 +4,46 @@ import (
 	"github.com/jpellizzari/fake-wego/pkg/models"
 )
 
-type Service interface {
-	CreatePullRequest(repo models.GitRepo, token string, branchName string) (models.PullRequest, error)
-	MergePullRequest(pr models.PullRequest, token string) error
+type Creator interface {
+	Create(repo models.GitRepo, token string, branchName string) (models.PullRequest, error)
 }
 
-type prService struct {
+type Merger interface {
+	Merge(pr models.PullRequest, token string) error
 }
 
-func NewPullRequestService() Service {
-	return prService{}
+// Composition example; it may not be a good choice to split this up in such a granular way.
+type Manager interface {
+	Creator
+	Merger
 }
 
-func (prs prService) CreatePullRequest(repo models.GitRepo, token string, branchName string) (models.PullRequest, error) {
+type mgr struct {
+	creator
+	merger
+}
+
+func NewManager() Manager {
+	return mgr{creator{}, merger{}}
+}
+
+type creator struct {
+}
+
+func NewPullRequestCreator() Creator {
+	return creator{}
+}
+
+func (prs creator) Create(repo models.GitRepo, token string, branchName string) (models.PullRequest, error) {
 	return models.PullRequest{}, nil
 }
 
-func (prs prService) MergePullRequest(pr models.PullRequest, token string) error {
+type merger struct{}
+
+func NewPullRequestMerger() Merger {
+	return merger{}
+}
+
+func (m merger) Merge(pr models.PullRequest, token string) error {
 	return nil
 }

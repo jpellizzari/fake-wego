@@ -4,27 +4,25 @@ import (
 	"context"
 
 	"github.com/jpellizzari/fake-wego/pkg/models"
-	"github.com/jpellizzari/fake-wego/pkg/services/cluster"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type Service interface {
-	Provision(c cluster.Applier, a models.Application, token string) (models.DeployKey, error)
+type Manager interface {
+	Create(c models.Cluster, a models.Application, token string) (models.DeployKey, error)
 	Fetch(c models.Cluster, a models.Application) (models.DeployKey, error)
 }
 
 type svc struct {
-	cs cluster.Applier
-	k  client.Client
+	k client.Client
 }
 
-func NewService(cs cluster.Applier, k client.Client) Service {
-	return svc{cs: cs, k: k}
+func NewService(k client.Client) Manager {
+	return svc{k: k}
 }
 
-func (s svc) Provision(c cluster.Applier, a models.Application, token string) (models.DeployKey, error) {
+func (s svc) Create(c models.Cluster, a models.Application, token string) (models.DeployKey, error) {
 	secret, err := doFluxThingsToMakeASecret(a.ConfigRepoURL)
 	if err != nil {
 		return models.DeployKey{}, err

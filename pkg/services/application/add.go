@@ -13,7 +13,7 @@ type Adder interface {
 	Add(app models.Application, cl models.Cluster, params AddParams) error
 }
 
-func NewAdder(gs gitrepo.Service, prs pullrequest.Service, cs cluster.Applier, dks deploykey.Service) Adder {
+func NewAdder(gs gitrepo.AppComitter, prs pullrequest.Manager, cs cluster.Applier, dks deploykey.Manager) Adder {
 	return addService{
 		gs:  gs,
 		prs: prs,
@@ -23,10 +23,10 @@ func NewAdder(gs gitrepo.Service, prs pullrequest.Service, cs cluster.Applier, d
 }
 
 type addService struct {
-	gs  gitrepo.Service
-	prs pullrequest.Service
+	gs  gitrepo.AppComitter
+	prs pullrequest.Manager
 	cs  cluster.Applier
-	dks deploykey.Service
+	dks deploykey.Manager
 }
 
 type AddParams struct {
@@ -46,13 +46,13 @@ func (a addService) Add(app models.Application, cl models.Cluster, params AddPar
 		return err
 	}
 
-	pr, err := a.prs.CreatePullRequest(destRepo, params.Token, "main")
+	pr, err := a.prs.Create(destRepo, params.Token, "main")
 	if err != nil {
 		return err
 	}
 
 	if params.AutoMerge {
-		if err := a.prs.MergePullRequest(pr, params.Token); err != nil {
+		if err := a.prs.Merge(pr, params.Token); err != nil {
 			return err
 		}
 	}

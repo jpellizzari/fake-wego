@@ -38,9 +38,9 @@ func main() {
 
 	k := fake.NewFakeClient()
 	gs := gitrepo.NewService()
-	prs := pullrequest.NewPullRequestService()
+	prs := pullrequest.NewManager()
 	cs := cluster.NewApplier()
-	dks := deploykey.NewService(cs, k)
+	dks := deploykey.NewService(k)
 	addSvc := application.NewAdder(gs, prs, cs, dks)
 
 	params.Token = os.Getenv("GITHUB_TOKEN")

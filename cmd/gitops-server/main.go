@@ -16,10 +16,10 @@ import (
 func main() {
 	mux := http.NewServeMux()
 	gs := gitrepo.NewService()
-	prs := pullrequest.NewPullRequestService()
+	prs := pullrequest.NewManager()
 	cs := cluster.NewApplier()
 	k := fake.NewFakeClient()
-	dks := deploykey.NewService(cs, k)
+	dks := deploykey.NewService(k)
 	as := application.NewAdder(gs, prs, cs, dks)
 	getSvc := application.NewGetter(k)
 	commitsSvc := commit.NewService(getSvc)

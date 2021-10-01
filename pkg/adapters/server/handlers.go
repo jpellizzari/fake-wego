@@ -38,7 +38,7 @@ func GetApp(gs application.Getter) http.Handler {
 	})
 }
 
-func ListCommits(getSvc application.Getter, cs commit.Service) http.Handler {
+func ListCommits(getSvc application.Getter, cs commit.Lister) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
 		token := r.Header.Get("Authorization")

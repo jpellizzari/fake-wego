@@ -10,11 +10,11 @@ import (
 	"github.com/jpellizzari/fake-wego/pkg/models"
 )
 
-type Service interface {
+type AppComitter interface {
 	CommitApplication(repo models.GitRepo, dk models.DeployKey, a models.Application) error
 }
 
-func NewService() Service {
+func NewService() AppComitter {
 	return gitService{}
 }
 
