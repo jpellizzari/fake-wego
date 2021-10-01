@@ -37,3 +37,6 @@ A: You betcha
 
 Q: **How do I instantiate a Model? Should I use a constructor or fill out a `struct`**?
 A: Constructors are preferable, but if a constructor requires too many arguments (more than 4), or a "params" `struct`, consider filling out a `struct` and using a `Validate` method instead.
+
+Q: **Do Models always have a corresponding Service (and vice versa)?**:
+A: No, not necessarily
